@@ -13,39 +13,55 @@ Usage:
 	);
 	
 The numbers given above are the defaults if you just do
-brickpattern();
-Define them to suit your scale and intended brick style.
+brickpattern();  define them to suit your scale and intended 
+brick style.
 	
 This routine just draws the bricks; you need to add a
 cube of "mortar" in the dimensions of your wall into which
-to embed the pattern.abs
+to embed the pattern.
 
 To use in other programs, create your brick pattern in the 
 required dimensions and export as a .STL file.  Note that
 this will lose the color definition.
 
-
 */
 
 module brickpattern(layers=6, run=10, brickwidth=4, brickheight=2, brickthickness=1, mortar=.3) {
-	translate ([-(brickwidth/2), 0, 0]) //moves the whole thing back over to the y axis for the half-brick width
-	for (layer = [0:1:layers]) {
-		shift = layer %2; //staggers every other layer
-		for (brick = [0:1:run]) {
-			if ((brick == 0) && (!shift) ) {  //half-brick for left side
-				translate([brick*(brickwidth+mortar)+(shift*(brickwidth/2))+brickwidth/2, layer*(brickheight+mortar), 0]) 
-					color("Red") cube([brickwidth/2, brickheight, brickthickness]);
-			}
-			else if ((brick == run) && (shift)) { //half-brick for right side
-				translate([brick*(brickwidth+mortar)+(shift*(brickwidth/2)), layer*(brickheight+mortar), 0]) 
-					color("Red") cube([brickwidth/2, brickheight, brickthickness]);
-			}
-			else { //full brick
-				translate([brick*(brickwidth+mortar)+(shift*(brickwidth/2)), layer*(brickheight+mortar), 0]) 
+	for (layer = [0:1:layers-1]) {
+		for (brick = [0:1:run-1]) {
+			if (layer % 2) {  //layer with half-bricks on each end
+				if (brick == 0) {  //first brick, half-brick
+					translate([	0, 
+								layer*(brickheight+mortar), 
+								0]) 
+						color("Red") cube([(brickwidth-mortar)/2, brickheight, brickthickness]);
+				}
+				else if (brick == run-1) { //last two bricks, a full one and ending with a half one...
+					translate([	(brickwidth/2+mortar/2) + (brick)*(brickwidth+mortar), 
+								layer*(brickheight+mortar), 
+								0]) 
+						color("Red") cube([(brickwidth-mortar)/2, brickheight, brickthickness]);
+					translate([	(brickwidth/2+mortar/2) + (brick-1)*(brickwidth+mortar), 
+								layer*(brickheight+mortar), 
+								0])
 						color("Red") cube([brickwidth, brickheight, brickthickness]);
+				}
+				else {  //second and subsequent full bricks
+					translate([	(brickwidth/2+mortar/2) + (brick-1)*(brickwidth+mortar), 
+								layer*(brickheight+mortar), 
+								0]) 
+						color("Red") cube([brickwidth, brickheight, brickthickness]);
+				}
+			}
+			else { // layer that doesn't contain half-bricks
+				translate(	[brick*(brickwidth+mortar),
+							layer*(brickheight+mortar), 
+							0]) 
+					color("Red") cube([brickwidth, brickheight, brickthickness]);
+
 			}
 		}
 	}
 }
 
-brickpattern();
+brickpattern(16,6);
