@@ -26,10 +26,11 @@ this will lose the color definition.
 
 */
 
-module brickpattern(layers=6, run=10, brickwidth=4, brickheight=2, brickthickness=1, mortar=.3) {
+module brickpattern(layers=6, run=10, brickwidth=4, brickheight=2, brickthickness=1, mortar=.3, shift=0) {
 	for (layer = [0:1:layers-1]) {
-		for (brick = [0:1:run-1]) {
-			if (layer % 2) {  //layer with half-bricks on each end
+		reg = shift ? !(layer%2) : layer%2;
+		for (brick = [0:1:run-1]) {			
+			if (reg) {  //layer with half-bricks on each end
 				if (brick == 0) {  //first brick, half-brick
 					translate([	0, 
 								layer*(brickheight+mortar), 
