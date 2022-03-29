@@ -11,8 +11,8 @@ Usage:
 		brickthickness=1, //individual brick thickness
 		mortar=0.3,  // width of mortar lines between bricks
 		shift=0,  // start row has half-bricks on ends
-		rand=0  //rotate each brick a random degree between 
-				//-rand and rand
+		rand=0  //rotate each brick a random angle between 
+				//-rand and rand, in degrees
 	);
 	
 The numbers given above are the defaults if you just do
@@ -29,8 +29,7 @@ this will lose the color definition.
 
 */
 
-module brickpattern(layers=6, run=10, brickwidth=4, 
-brickheight=2, brickthickness=1, mortar=.3, shift=0, rand=1) {
+module brickpattern(layers=6, run=10, brickwidth=4, brickheight=2, brickthickness=1, mortar=.3, shift=0, rand=0) {
 	for (layer = [0:1:layers-1]) {
 		reg = shift ? !(layer%2) : layer%2;
 		for (brick = [0:1:run-1]) {			
