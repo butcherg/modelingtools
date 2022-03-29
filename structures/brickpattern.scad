@@ -30,7 +30,7 @@ this will lose the color definition.
 */
 
 module brickpattern(layers=6, run=10, brickwidth=4, 
-brickheight=2, brickthickness=1, mortar=.3, shift=0, rand=0) {
+brickheight=2, brickthickness=1, mortar=.3, shift=0, rand=1) {
 	for (layer = [0:1:layers-1]) {
 		reg = shift ? !(layer%2) : layer%2;
 		for (brick = [0:1:run-1]) {			
@@ -62,7 +62,7 @@ brickheight=2, brickthickness=1, mortar=.3, shift=0, rand=0) {
 				translate(	[brick*(brickwidth+mortar),
 							layer*(brickheight+mortar), 
 							0]) 
-					color("Red") cube([brickwidth, brickheight, brickthickness]);
+					color("Red") rotate([0,0,rands(-rand,rand,1)[0]]) cube([brickwidth, brickheight, brickthickness]);
 
 			}
 		}
