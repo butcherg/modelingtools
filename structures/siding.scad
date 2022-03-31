@@ -13,6 +13,13 @@ Usage:
 	
 The numbers given above are the defaults if you just do
 clapboard();  define them to suit your scale and clapboard style.
+
+This module just presents the clapboard planks; to make a 
+complete wall with a smooth back, union it with a cube of 
+the width, height, and boardwidth of the clapboard pattern.
+The example use code at the bottom of this file demonstrates this;
+uncomment the cube() line by removing the two forward slashes 
+(//).
 	
 To use in other programs, create your clapboard pattern in the 
 required dimensions and export as a .STL file.  Note that
@@ -43,7 +50,8 @@ Usage:
 	);
 	
 The numbers given above are the defaults if you just do
-planksiding();  define them to suit your scale and clapboard style.
+planksiding();  define them to suit your scale and clapboard 
+style.
 	
 To use in other programs, create your planksiding in the 
 required dimensions and export as a .STL file.  Note that
@@ -63,5 +71,10 @@ module planksiding(width=10, height=5, boardwidth=1, boardthickness=0.1, notch=0
 	}
 }
 
-translate([0,6,0]) clapboard();
+
+translate([0,6,0]) {
+	clapboard();
+	//color("white") cube([10,5,.1]);
+}
 planksiding();
+
