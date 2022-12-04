@@ -128,6 +128,6 @@ module doublehung_window(openingwidth, openingheight, depth, boardwidth, boardth
 	
 }
 
-scale(1/87)		//HO scale
-	scale(25.4) //inches to millimeters
+//scale(1/87)		//HO scale
+//	scale(25.4) //inches to millimeters
 		doublehung_window(openingwidth, openingheight, windowdepth, boardwidth, boardthickness, sashmuntinwidth, sashdepth, lowersashlayout, uppersashlayout );
