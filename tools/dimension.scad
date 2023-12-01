@@ -1,3 +1,5 @@
+function roundoff(n) = round(n*1000.0) / 1000.0;
+
 //global variables, used by all modules:
 linewidth=0.005;  //change to suit application
 fontsize=0.05;	//change to suit application
@@ -15,9 +17,9 @@ turnsize = 50;
 	
 */
 module dimension(start=0.01, end=0.2, height=0.05, lines=0.05, handwheel=false) {
-	thous = (end-start) / ticksize;
+	thous = roundoff((end-start) / ticksize);
 	turns = floor(thous / turnsize);
-	ticks = thous % turnsize;
+	ticks = floor(thous % turnsize);
 	nbr = end-start;
 	txt = handwheel ? str(nbr," (",turns,"/",ticks,")") : str(nbr);
 	textlen=fontsize*len(txt);
@@ -65,9 +67,9 @@ line_dash() - draws a vertical dashed line at 'at' on the X axis
 */
 
 module line_dash(at=0, length=1, labelatbottom=0, handwheel=0) {
-	thous = (at) / ticksize;
+	thous = roundoff((at) / ticksize);
 	turns = floor(thous / turnsize);
-	ticks = thous % turnsize;
+	ticks = floor(thous % turnsize);
 	txt = handwheel ? str(at," (",turns,"/",ticks,")") : str(at);
 	textlen=fontsize*len(txt);
 	translate([at,0,0])
