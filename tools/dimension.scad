@@ -82,6 +82,25 @@ module line_dash(at=0, length=1, labelatbottom=0, handwheel=0) {
 			color("black") linear_extrude(fontdepth) text(text=txt, size=fontsize, halign="center", valign="center");
 }
 
+/*
+radial_line_dash() - draws a line rotated x degrees from the -X axis
+
+	deg: degrees to rotate
+	length: length of line
+	
+*/
+module radial_line_dash(deg=0, length=1) {
+	txt = str(deg, " deg");
+	textlen=fontsize*len(txt);
+	rotate([0,deg-90,0]) {
+		for (i=[0:fontsize/2:length]) {
+			color("black") translate([0,0,i]) cylinder(d=linewidth, h=fontsize/3);
+		}
+		translate([-textlen/3,0,length+fontsize]) 
+			rotate([90,0,0]) 
+				color("black") linear_extrude(fontdepth)text(text=txt, size=fontsize);
+	}
+}
 
 /* examples:
 
