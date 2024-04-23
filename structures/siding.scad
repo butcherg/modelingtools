@@ -31,7 +31,7 @@ module clapboard(width=10, height=5, boardwidth=1, boardthickness=0.1, pitch=5)
 {
 	translate([0,0,boardthickness]) //move the whole thing up above Z=0
 		for (board = [0:1:height-1]) // number of boards, given by height
-			translate ([0,board*boardwidth,0]) rotate([-pitch,0,0]) color("white") cube ([width, boardwidth, boardthickness]);
+			translate ([0,board*boardwidth,0]) rotate([-pitch,0,0]) cube ([width, boardwidth, boardthickness]);
 	
 }
 
@@ -62,7 +62,7 @@ this will lose the color definition.
 module planksiding(width=10, height=5, boardwidth=1, boardthickness=0.1, notch=0.4)
 {	
 	difference() {
-		color("white") cube([width, height*boardwidth, boardthickness]);
+		cube([width, height*boardwidth, boardthickness]);
 		union() {
 			for (board = [0:1:height])
 				translate ([-width/2,board*boardwidth,boardthickness-(boardthickness * notch)]) 
