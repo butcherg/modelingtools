@@ -37,7 +37,7 @@ call before each sash() call in the doublehung_window() module.
 //Modify these values to suit your window requirements:
 openingwidth=24;
 openingheight=48;
-windowdepth=3;
+windowdepth=5;
 boardwidth=3;
 boardthickness=1;
 sashmuntinwidth=1;
@@ -121,11 +121,12 @@ module windowframe(openingwidth, openingheight, depth, boardwidth, boardthicknes
 
 //draws a double-hung window anchored to an opening width and height with the specified sash layout:
 module doublehung_window(openingwidth, openingheight, depth, boardwidth, boardthickness, sashthickness, sashdepth, uppersash, lowersash) {
-	windowframe(openingwidth, openingheight, depth, boardwidth, boardthickness);
-	sh = (openingheight/2)-sashthickness/2;
-	translate([boardthickness,0,sashdepth+lowersashoffset]) rotate([0,90,0]) sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth,uppersash);
-	translate([(openingheight/2)-boardthickness/2,0,sashdepth*2+uppersashoffset]) rotate([0,90,0]) sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth, lowersash);
-	
+	translate([0,0,-depth+boardthickness]) {
+		windowframe(openingwidth, openingheight, depth, boardwidth, boardthickness);
+		sh = (openingheight/2)-sashthickness/2;
+		translate([boardthickness,0,sashdepth+lowersashoffset]) rotate([0,90,0]) sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth,uppersash);
+		translate([openingheight/2,0,sashdepth*2+uppersashoffset]) rotate([0,90,0]) sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth, lowersash);
+	}
 }
 
 //scale(1/87)		//HO scale
