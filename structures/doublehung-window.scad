@@ -76,59 +76,41 @@ module board(length, width, thickness) {
 		translate([0,-width/2,0]) cube([length, width, thickness]);
 }
 
-//draws the window frame using a bunch of board()s, anchored to wall opening width and height:
-module windowframe(openingwidth, openingheight, depth, boardwidth, boardthickness) { //, uppersash=[1,2], lowersash=[1,2]) {
-	
-	//head:
-	translate([openingheight-boardthickness,boardthickness,depth-boardthickness]) //move board to edge of openingheight
-		translate([boardwidth/2,-(openingwidth+boardwidth*2)/2,0]) //put board edge on y axis
-			rotate([0,0,90])
-				board(openingwidth+boardwidth*2-boardthickness*2, boardwidth, boardthickness);
-
-	//casings:
-	//left:
-	translate([0,openingwidth/2+boardwidth/2-boardthickness,depth-boardthickness])
-		board(openingheight-boardthickness,boardwidth,boardthickness);
-	//right;
-	translate([0,-openingwidth/2-boardwidth/2+boardthickness,depth-boardthickness])
-		board(openingheight-boardthickness,boardwidth,boardthickness);
-
-	//jambs:
-	//left:
-	translate([0,openingwidth/2,(depth-boardthickness)/2])
-		rotate([90,0,0])
-			board(openingheight-boardthickness,depth-boardthickness,boardthickness);
-	//right:
-	translate([0,-openingwidth/2+boardthickness,(depth-boardthickness)/2])
-		rotate([90,0,0])
-			board(openingheight-boardthickness,depth-boardthickness,boardthickness);
-	//top:
-	translate([openingheight-boardthickness,-(openingwidth)/2,(depth-boardthickness)/2])
-		rotate([90,0,90])
-			board(openingwidth, depth-boardthickness, boardthickness);
-
-	//sill:
-	translate([0,-openingwidth/2+boardthickness,depth/2])
-		rotate([90,0,90])
-			board(openingwidth-boardthickness*2, depth, boardthickness);
-	translate([0,-(openingwidth+boardwidth*2+boardthickness/2)/2,depth])
-		rotate([90,0,90])
-			board(openingwidth+boardwidth*2+boardthickness/2, boardthickness*2, boardthickness);
-	translate([-boardthickness,-(openingwidth+boardwidth*2-boardthickness*2)/2,depth-boardthickness/2])
-		rotate([90,0,90])
-			board(openingwidth+boardwidth*2-boardthickness*2, boardthickness, boardthickness);
+module windowframe(openingwidth, openingheight, depth, boardwidth, boardthickness, inset=0) {
+	difference() {
+		union() {
+			difference() {
+				translate([0,-(openingwidth+boardwidth)/2,0])
+					cube([openingheight+boardwidth,openingwidth+boardwidth,depth]);
+				translate([-0.01,-(openingwidth-boardthickness*2)/2,-depth*2]) //main opening
+					cube([openingheight,openingwidth-boardthickness*2,depth*4]);
+			}
+			translate([0,-(openingwidth+boardwidth*2)/2,0])
+				cube([boardthickness,openingwidth+boardwidth*2,depth+boardwidth/2]);
+		}
+		if (inset) {  //cutouts to support inserting a printed window into a hole
+			translate([-openingheight,openingwidth/2,-0.01])
+				cube([openingheight*3,boardwidth*2,depth-boardthickness]);
+			translate([-openingheight,-(openingwidth/2)-boardwidth*2,-0.01])
+				cube([openingheight*3,boardwidth*2,depth-boardthickness]);
+			translate([openingheight+boardthickness,-openingwidth,-0.01])
+				cube([boardwidth,openingwidth*2,depth-boardthickness]);
+		}
+	}
 }
 
+
 //draws a double-hung window anchored to an opening width and height with the specified sash layout:
-module doublehung_window(openingwidth, openingheight, depth, boardwidth, boardthickness, sashthickness, sashdepth, uppersash, lowersash) {
+module doublehung_window(openingwidth, openingheight, depth, boardwidth, boardthickness, sashthickness, sashdepth, uppersash, lowersash, inset=1) {
 	translate([0,0,-depth+boardthickness]) {
-		windowframe(openingwidth, openingheight, depth, boardwidth, boardthickness);
+		windowframe(openingwidth, openingheight, depth, boardwidth, boardthickness, inset);
 		sh = (openingheight/2)-sashthickness/2;
 		translate([boardthickness,0,sashdepth+lowersashoffset]) rotate([0,90,0]) sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth,uppersash);
-		translate([openingheight/2,0,sashdepth*2+uppersashoffset]) rotate([0,90,0]) sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth, lowersash);
+		translate([openingheight/2+boardthickness/2,0,sashdepth*2+uppersashoffset]) rotate([0,90,0]) sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth, lowersash);
 	}
 }
 
 //scale(1/87)		//HO scale
 //	scale(25.4) //inches to millimeters
 		doublehung_window(openingwidth, openingheight, windowdepth, boardwidth, boardthickness, sashmuntinwidth, sashdepth, lowersashlayout, uppersashlayout );
+
