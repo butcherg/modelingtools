@@ -35,7 +35,7 @@ module clapboard(width=10, height=5, boardwidth=1, boardthickness=0.1, pitch=5)
 	
 }
 
-/* planksiding - makes plank walls
+/* planksiding_old - makes plank walls
 
 Usage:
 	use <path/to/siding.scad>
@@ -59,7 +59,7 @@ this will lose the color definition.
 
 */
 
-module planksiding(width=10, height=5, boardwidth=1, boardthickness=0.1, notch=0.4)
+module planksiding_old(width=10, height=5, boardwidth=1, boardthickness=0.1, notch=0.4)
 {	
 	difference() {
 		cube([width, height*boardwidth, boardthickness]);
@@ -72,9 +72,42 @@ module planksiding(width=10, height=5, boardwidth=1, boardthickness=0.1, notch=0
 }
 
 
-translate([0,6,0]) {
-	clapboard();
-	//color("white") cube([10,5,.1]);
+/* planksiding - makes plank walls
+
+Usage:
+	use <path/to/siding.scad>
+	...
+	planksiding(
+		width=10, //how wide, in units
+		height=5, //how tall, in units
+		boardwidth=4, //individual board width
+		boardthickness=1, //individual board thickness
+		notch=0.3,  //depth of the notch in the board interfaces,
+					// 0=no notch, 1=notch is full depth of board.
+	);
+	
+The numbers given above are the defaults if you just do
+planksiding();  define them to suit your scale and clapboard 
+style.
+	
+To use in other programs, create your planksiding in the 
+required dimensions and export as a .STL file.
+
+*/
+
+
+module planksiding(width=10*12, height=5*12, boardwidth=4, boardthickness=1, notch=0.3)
+{	
+	difference() {
+		cube([width, height, boardthickness]);
+		union() {
+			for (board = [0:1:height/boardwidth])
+				translate ([-width/2,board*boardwidth,boardthickness-(boardthickness * notch)]) 
+					rotate([45,0,0]) cube (size=[width*2, boardthickness*3, boardthickness*3]);
+		}
+	}
 }
+
+//clapboard();
 planksiding();
 
