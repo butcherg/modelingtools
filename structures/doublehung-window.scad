@@ -34,18 +34,46 @@ call before each sash() call in the doublehung_window() module.
 
 */
 
-//Modify these values to suit your window requirements:
-openingwidth=24;
-openingheight=48;
-windowdepth=5;
-boardwidth=4;
-boardthickness=1;
-sashmuntinwidth=2;
-sashdepth=2;
-uppersashlayout=[2,2];
-lowersashlayout=[2,2];
-lowersashoffset=0;
-uppersashoffset=0;
+//Width of the wall opening into which the window will be inserted
+opening_width=24;
+//Height of the wall opening into which the window will be inserted
+opening_height=48;
+//Overall depth of the window
+window_depth=4;
+//Width of the boards used to make the window frame
+board_width=4;
+//Thickness of the boards used to make the window frame and sashes
+board_thickness=1;
+//Width of the muntins, the frame pieces that make up the sash
+muntin_width=1;
+//Depth of the sash frames
+sash_depth=1;
+//Number of rows of panes in the upper sash
+upper_sash_layout_rows=2;
+//Number of columns of panes in the upper sash
+upper_sash_layout_columns=2;
+//Number of rows of panes in the lower sash
+lower_sash_layout_rows=2;
+//Number of columns of panes in the lower sash
+lower_sash_layout_columns=2;
+//Use this to change the depth of the upper sash
+upper_sash_offset=0;
+//Use this to change the depth of the lower sash
+lower_sash_offset=0;
+//Use this to print the window with/without the spacing to allow inserting a printed window into a separate wall
+inset=1;
+//The modeling scale of the .stl file.  Specifies the denominator of the scale, e.g., 1/87 for HO scale, the default.  Assumes the dimensions specified in the previous parameters are prototype, e.g. 1:1.
+modeling_scale=87;
+//Scales the model for printing.  Default is 25.4, the multiplier to convert decimal inches to millimeters.
+printing_scale=25.4;
+
+
+
+
+
+upper_sash_layout=[upper_sash_layout_rows,upper_sash_layout_columns]*1;
+lower_sash_layout=[lower_sash_layout_rows,lower_sash_layout_columns]*1;
+
 
 //draws a sash with the defined pane layout
 module sash(width, height, thickness, depth, panelayout=[2,2]) {
@@ -76,46 +104,47 @@ module board(length, width, thickness) {
 		translate([0,-width/2,0]) cube([length, width, thickness]);
 }
 
-module windowframe(openingwidth, openingheight, depth, boardwidth, boardthickness, inset=0) {
+module windowframe(opening_width, opening_height, depth, board_width, board_thickness, inset=0) {
 	difference() {
 		union() {
 			difference() {
-				translate([0,-(openingwidth+boardwidth)/2,0])
-					cube([openingheight+boardwidth,openingwidth+boardwidth,depth]);
-				translate([-0.01,-(openingwidth-boardthickness*2)/2,-depth*2]) //main opening
-					cube([openingheight,openingwidth-boardthickness*2,depth*4]);
+				translate([0,-(opening_width+board_width)/2,0])
+					cube([opening_height+board_width,opening_width+board_width,depth]);
+				translate([-0.01,-(opening_width-board_thickness*2)/2,-depth*2]) //main opening
+					cube([opening_height,opening_width-board_thickness*2,depth*4]);
 			}
-			translate([0,-(openingwidth+boardwidth*2)/2,0])
-				cube([boardthickness,openingwidth+boardwidth*2,depth+boardwidth/2]);
+			translate([0,-(opening_width+board_width*2)/2,0])
+				cube([board_thickness,opening_width+board_width*2,depth+board_width/2]);
 		}
 		if (inset) {  //cutouts to support inserting a printed window into a hole
-			translate([-openingheight,openingwidth/2,-0.01])
-				cube([openingheight*3,boardwidth*2,depth-boardthickness]);
-			translate([-openingheight,-(openingwidth/2)-boardwidth*2,-0.01])
-				cube([openingheight*3,boardwidth*2,depth-boardthickness]);
-			translate([openingheight+boardthickness,-openingwidth,-0.01])
-				cube([boardwidth,openingwidth*2,depth-boardthickness]);
+			translate([-opening_height,opening_width/2,-0.01])
+				cube([opening_height*3,board_width*2,depth-board_thickness]);
+			translate([-opening_height,-(opening_width/2)-board_width*2,-0.01])
+				cube([opening_height*3,board_width*2,depth-board_thickness]);
+			translate([opening_height+board_thickness,-opening_width,-0.01])
+				cube([board_width,opening_width*2,depth-board_thickness]);
 		}
 	}
 }
 
 
 //draws a double-hung window anchored to an opening width and height with the specified sash layout:
-module doublehung_window(openingwidth, openingheight, depth, boardwidth, boardthickness, sashthickness, sashdepth, uppersash, lowersash, inset) {
-	translate([0,0,-depth+boardthickness]) {
-		windowframe(openingwidth, openingheight, depth, boardwidth, boardthickness, inset);
-		sh = ((openingheight-boardthickness)/2);
-		translate([boardthickness+sh,0,sashdepth+sashthickness])			
+module doublehung_window(opening_width, opening_height, depth, board_width, board_thickness, sashthickness, sash_depth, uppersash, lowersash, inset) {
+	rotate([0,-90,90])
+	translate([0,-opening_width/2,-depth+board_thickness]) {
+		windowframe(opening_width, opening_height, depth, board_width, board_thickness, inset);
+		sh = ((opening_height-board_thickness)/2);
+		translate([board_thickness+sh,0,sash_depth+sashthickness])			
 			rotate([0,90,0]) 
-				sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth,uppersash);
-		translate([boardthickness,0,sashdepth])			
+				sash(opening_width-board_thickness*2,sh,sashthickness,sash_depth,uppersash);
+		translate([board_thickness,0,sash_depth])			
 			rotate([0,90,0]) 
-				sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth, lowersash);
+				sash(opening_width-board_thickness*2,sh,sashthickness,sash_depth, lowersash);
 
 	}
 }
 
-//scale(1/87)		//HO scale
-//	scale(25.4) //inches to millimeters
-		doublehung_window(openingwidth, openingheight, windowdepth, boardwidth, boardthickness, sashmuntinwidth, sashdepth, lowersashlayout, uppersashlayout, inset=1);
+scale(printing_scale)
+	scale(modeling_scale)
+		doublehung_window(opening_width, opening_height, window_depth, board_width, board_thickness, muntin_width, sash_depth, lower_sash_layout, upper_sash_layout, inset);
 
