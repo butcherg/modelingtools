@@ -38,10 +38,10 @@ call before each sash() call in the doublehung_window() module.
 openingwidth=24;
 openingheight=48;
 windowdepth=5;
-boardwidth=3;
+boardwidth=4;
 boardthickness=1;
-sashmuntinwidth=1;
-sashdepth=1;
+sashmuntinwidth=2;
+sashdepth=2;
 uppersashlayout=[2,2];
 lowersashlayout=[2,2];
 lowersashoffset=0;
@@ -101,16 +101,21 @@ module windowframe(openingwidth, openingheight, depth, boardwidth, boardthicknes
 
 
 //draws a double-hung window anchored to an opening width and height with the specified sash layout:
-module doublehung_window(openingwidth, openingheight, depth, boardwidth, boardthickness, sashthickness, sashdepth, uppersash, lowersash, inset=1) {
+module doublehung_window(openingwidth, openingheight, depth, boardwidth, boardthickness, sashthickness, sashdepth, uppersash, lowersash, inset) {
 	translate([0,0,-depth+boardthickness]) {
 		windowframe(openingwidth, openingheight, depth, boardwidth, boardthickness, inset);
-		sh = (openingheight/2)-sashthickness/2;
-		translate([boardthickness,0,sashdepth+lowersashoffset]) rotate([0,90,0]) sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth,uppersash);
-		translate([openingheight/2+boardthickness/2,0,sashdepth*2+uppersashoffset]) rotate([0,90,0]) sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth, lowersash);
+		sh = ((openingheight-boardthickness)/2);
+		translate([boardthickness+sh,0,sashdepth+sashthickness])			
+			rotate([0,90,0]) 
+				sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth,uppersash);
+		translate([boardthickness,0,sashdepth])			
+			rotate([0,90,0]) 
+				sash(openingwidth-boardthickness*2,sh,sashthickness,sashdepth, lowersash);
+
 	}
 }
 
 //scale(1/87)		//HO scale
 //	scale(25.4) //inches to millimeters
-		doublehung_window(openingwidth, openingheight, windowdepth, boardwidth, boardthickness, sashmuntinwidth, sashdepth, lowersashlayout, uppersashlayout );
+		doublehung_window(openingwidth, openingheight, windowdepth, boardwidth, boardthickness, sashmuntinwidth, sashdepth, lowersashlayout, uppersashlayout, inset=1);
 
