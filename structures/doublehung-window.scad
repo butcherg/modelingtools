@@ -145,6 +145,6 @@ module doublehung_window(opening_width, opening_height, depth, board_width, boar
 }
 
 scale(printing_scale)
-	scale(modeling_scale)
+	scale(1/modeling_scale)
 		doublehung_window(opening_width, opening_height, window_depth, board_width, board_thickness, muntin_width, sash_depth, lower_sash_layout, upper_sash_layout, inset);
 
