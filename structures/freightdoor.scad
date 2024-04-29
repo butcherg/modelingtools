@@ -23,8 +23,30 @@ modeling_scale=87;
 //Scales the model for printing.  Default is 25.4, the multiplier to convert decimal inches to millimeters.
 printing_scale=25.4;
 
+module doorframe(opening_width, opening_height, depth, board_width, board_thickness, inset=0) {
+	difference() {
+		//union() {
+			difference() {
+				translate([0,-(opening_width+board_width)/2,0])
+					cube([opening_height+board_width,opening_width+board_width,depth]);
+				translate([-0.01,-(opening_width-board_thickness*2)/2,-depth*2]) //main opening
+					cube([opening_height,opening_width-board_thickness*2,depth*4]);
+			}
+			//translate([0,-(opening_width+board_width*2)/2,0])
+			//	cube([board_thickness,opening_width+board_width*2,depth+board_width/2]);
+		//}
+		if (inset) {  //cutouts to support inserting a printed window into a hole
+			translate([-opening_height,opening_width/2,-0.01])
+				cube([opening_height*3,board_width*2,depth-board_thickness]);
+			translate([-opening_height,-(opening_width/2)-board_width*2,-0.01])
+				cube([opening_height*3,board_width*2,depth-board_thickness]);
+			translate([opening_height+board_thickness,-opening_width,-0.01])
+				cube([board_width,opening_width*2,depth-board_thickness]);
+		}
+	}
+}
 
-module freight_door(opening_width=8*12, height=10*12, transom_height=2*12, transomwindow_quantity=8, boardwidth=4, boardthickness=2, doorinset=2, rotation=0) {
+module freight_door(opening_width=8*12, height=10*12, transom_height=2*12, transomwindow_quantity=8, boardwidth=4, boardthickness=2, doorinset=2, rotation=0, inset=1) {
 	//door core:
 	translate([0,boardthickness/2,0])
 		wainscotting(width=opening_width, height=height-transom_height, boardwidth=3, rotation=rotation);
@@ -50,17 +72,12 @@ module freight_door(opening_width=8*12, height=10*12, transom_height=2*12, trans
 			cube([boardwidth,boardthickness,transom_height]);
 
 	//door frame:
-	translate([-boardwidth/2,-boardwidth/2,height-boardwidth/2])
-		cube([opening_width+boardwidth,boardthickness,boardwidth]);
-	translate([0,-boardwidth/2,0])
-		rotate([0,-90,0])
-			cube([height+boardwidth/2,boardthickness,boardwidth]);
-	translate([opening_width+boardthickness,-boardwidth/2,0])
-		rotate([0,-90,0])
-			cube([height+boardwidth/2,boardthickness,boardwidth]);
+	translate([opening_width/2,board_thickness,0])
+		rotate([90,-90,0])
+			doorframe(opening_width, opening_height, board_thickness+doorinset, board_width, board_thickness, inset);
 
 }
 
 scale(printing_scale)
 	scale(1/modeling_scale)
-		freight_door();
+		freight_door(opening_width, opening_height, transom_height, transomwindow_quantity, board_width, board_thickness, doorinset, rotation, inset);
