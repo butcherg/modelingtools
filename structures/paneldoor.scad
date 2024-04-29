@@ -21,16 +21,16 @@ printing_scale=25.4;
 
 module doorframe(opening_width, opening_height, depth, board_width, board_thickness, inset=0) {
 	difference() {
-		union() {
+		//union() {
 			difference() {
 				translate([0,-(opening_width+board_width)/2,0])
 					cube([opening_height+board_width,opening_width+board_width,depth]);
 				translate([-0.01,-(opening_width-board_thickness*2)/2,-depth*2]) //main opening
 					cube([opening_height,opening_width-board_thickness*2,depth*4]);
 			}
-			translate([0,-(opening_width+board_width*2)/2,0])
-				cube([board_thickness,opening_width+board_width*2,depth+board_width/2]);
-		}
+			//translate([0,-(opening_width+board_width*2)/2,0])
+			//	cube([board_thickness,opening_width+board_width*2,depth+board_width/2]);
+		//}
 		if (inset) {  //cutouts to support inserting a printed window into a hole
 			translate([-opening_height,opening_width/2,-0.01])
 				cube([opening_height*3,board_width*2,depth-board_thickness]);
