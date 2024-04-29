@@ -12,15 +12,9 @@ transomwindow_quantity=3;
 board_width=4;
 //Thickness of the boards used to make the door frame
 board_thickness=2;
-
-
-//opening_width=8*12;
-//height=10*12;
-//transom_height=2*12;
-//transomwindow_quantity=8;
-//boardwidth=4;
-//boardthickness=2;
+//How deep is the door in the frame
 doorinset=2;
+//The angle of the door planks
 rotation=0;
 //Use this to print the window with/without the spacing to allow inserting a printed window into a separate wall
 inset=1;
