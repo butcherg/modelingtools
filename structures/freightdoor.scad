@@ -23,25 +23,25 @@ modeling_scale=87;
 //Scales the model for printing.  Default is 25.4, the multiplier to convert decimal inches to millimeters.
 printing_scale=25.4;
 
-module doorframe(opening_width, opening_height, depth, board_width, board_thickness, inset=0) {
+module doorframe(openingwidth, openingheight, depth, boardwidth, boardthickness, inset=0) {
 	difference() {
 		//union() {
 			difference() {
-				translate([0,-(opening_width+board_width)/2,0])
-					cube([opening_height+board_width,opening_width+board_width,depth]);
-				translate([-0.01,-(opening_width-board_thickness*2)/2,-depth*2]) //main opening
-					cube([opening_height,opening_width-board_thickness*2,depth*4]);
+				translate([0,-(openingwidth+boardwidth)/2,0])
+					cube([openingheight+boardwidth,openingwidth+boardwidth,depth]);
+				translate([-0.01,-(openingwidth-board_thickness*2)/2,-depth*2]) //main opening
+					cube([openingheight,openingwidth-board_thickness*2,depth*4]);
 			}
-			//translate([0,-(opening_width+board_width*2)/2,0])
-			//	cube([board_thickness,opening_width+board_width*2,depth+board_width/2]);
+			//translate([0,-(openingwidth+boardwidth*2)/2,0])
+			//	cube([board_thickness,openingwidth+boardwidth*2,depth+boardwidth/2]);
 		//}
 		if (inset) {  //cutouts to support inserting a printed window into a hole
-			translate([-opening_height,opening_width/2,-0.01])
-				cube([opening_height*3,board_width*2,depth-board_thickness]);
-			translate([-opening_height,-(opening_width/2)-board_width*2,-0.01])
-				cube([opening_height*3,board_width*2,depth-board_thickness]);
-			translate([opening_height+board_thickness,-opening_width,-0.01])
-				cube([board_width,opening_width*2,depth-board_thickness]);
+			translate([-openingheight,openingwidth/2,-0.01])
+				cube([openingheight*3,boardwidth*2,depth-board_thickness]);
+			translate([-openingheight,-(openingwidth/2)-boardwidth*2,-0.01])
+				cube([openingheight*3,boardwidth*2,depth-board_thickness]);
+			translate([openingheight+board_thickness,-openingwidth,-0.01])
+				cube([boardwidth,openingwidth*2,depth-board_thickness]);
 		}
 	}
 }
@@ -74,8 +74,8 @@ module freight_door(opening_width=8*12, height=10*12, transom_height=2*12, trans
 	//door frame:
 	translate([opening_width/2,board_thickness,0])
 		rotate([90,-90,0])
-			doorframe(opening_width, opening_height, board_thickness+doorinset, board_width, board_thickness, inset);
-
+			//doorframe(opening_width, opening_height, board_thickness+doorinset, board_width, board_thickness, inset);
+			doorframe(openingwidth=opening_width, openingheight=height, depth=board_thickness+doorinset, boardwidth=boardwidth, boardthickness=boardthickness, inset=inset);
 }
 
 scale(printing_scale)
