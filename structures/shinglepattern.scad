@@ -12,6 +12,13 @@ shingle_height=8;
 shingle_gap=0.5;
 //Shingle thickness
 shingle_thickness=0.5;
+//Roof thickness
+roof_thickness=1;
+
+//The modeling scale of the .stl file.  Specifies the denominator of the scale, e.g., 1/87 for HO scale, the default.  Assumes the dimensions specified in the previous parameters are prototype, e.g. 1:1.
+modeling_scale=87;
+//Scales the model for printing.  Default is 25.4, the multiplier to convert decimal inches to millimeters.
+printing_scale=25.4;
 
 
 module shingle(width, height, thickness, gap) {
@@ -35,8 +42,10 @@ module shingle_sheet(width, height) {
 		}
 		translate([-shingle_width*2,0,-shingle_thickness*5]) cube([shingle_width*2,height,shingle_thickness*10]);
 		translate([width,0,-shingle_thickness*5]) cube([shingle_width*2,height,shingle_thickness*10]);
-		translate([0,height,-shingle_thickness*5]) cube([width+shingle_width,shingle_height*2,shingle_thickness*10]);
+		translate([-shingle_width,height-0.001,-shingle_thickness*5]) cube([width+shingle_width*2,shingle_height*2,shingle_thickness*10]);
 	}
 }
 
-shingle_sheet(300,200);
+scale(printing_scale)
+	scale(1/modeling_scale)
+		shingle_sheet(sheet_width,sheet_height);
