@@ -29,9 +29,8 @@ this will lose the color definition.
 
 module clapboard(width=10, height=5, boardwidth=1, boardthickness=0.1, pitch=5)
 {
-	translate([0,0,boardthickness]) //move the whole thing up above Z=0
-		for (board = [0:1:height-1]) // number of boards, given by height
-			translate ([0,board*boardwidth,0]) rotate([-pitch,0,0]) cube ([width, boardwidth, boardthickness]);
+	for (board = [0:1:height-1]) // number of boards, given by height
+		translate ([0,board*boardwidth,0]) rotate([-pitch,0,0]) cube ([width, boardwidth, boardthickness]);
 	
 }
 
@@ -96,7 +95,7 @@ required dimensions and export as a .STL file.
 */
 
 
-module planksiding(width=10*12, height=5*12, boardwidth=4, boardthickness=1, notch=0.3)
+module planksiding(width=10*12, height=5*12, boardwidth=4, boardthickness=1, notch=0.3, wallthickness=1)
 {	
 	difference() {
 		cube([width, height, boardthickness]);
@@ -106,6 +105,7 @@ module planksiding(width=10*12, height=5*12, boardwidth=4, boardthickness=1, not
 					rotate([45,0,0]) cube (size=[width*2, boardthickness*3, boardthickness*3]);
 		}
 	}
+	translate([0,0,-wallthickness]) cube([width, height, wallthickness]);
 }
 
 //clapboard();

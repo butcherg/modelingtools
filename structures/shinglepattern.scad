@@ -38,7 +38,7 @@ module shingle_sheet(width, height) {
 	difference() {
 		union() {
 			shingle_pattern(width,height);
-			translate([0,0,-1]) cube([width,height,1]);
+			translate([0,0,-roof_thickness]) cube([width,height,roof_thickness]);
 		}
 		translate([-shingle_width*2,0,-shingle_thickness*5]) cube([shingle_width*2,height,shingle_thickness*10]);
 		translate([width,0,-shingle_thickness*5]) cube([shingle_width*2,height,shingle_thickness*10]);
