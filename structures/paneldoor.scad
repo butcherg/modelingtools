@@ -52,8 +52,9 @@ module panel_door(opening_width=3*12, opening_height=8*12, transom_height=1*12, 
 		cube([opening_width,board_thickness,board_width]);
 	translate([0,0,opening_height-transom_height]) 
 		cube([opening_width,board_thickness,board_width]);
-	translate([0,0,opening_height-board_width-board_thickness]) 
-		cube([opening_width,board_thickness,board_width+board_thickness]);
+	//top transom frame, commented out because it eats into transom height:
+	//translate([0,0,opening_height-board_width-board_thickness]) 
+	//	cube([opening_width,board_thickness,board_width+board_thickness]);
 
 	//vertical door border
 	translate([0,0,0]) 
@@ -63,7 +64,7 @@ module panel_door(opening_width=3*12, opening_height=8*12, transom_height=1*12, 
 	
 	//transom windows:
 	transomwindow_width = (opening_width-board_width-board_thickness*2)/ transomwindow_quantity;
-	for (i = [1:1:transomwindow_quantity])
+	for (i = [1:1:transomwindow_quantity-1])
 		translate([(i*transomwindow_width)+board_thickness,0,opening_height-transom_height]) 
 			cube([board_width,board_thickness,transom_height]);
 	
