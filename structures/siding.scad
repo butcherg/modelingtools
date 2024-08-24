@@ -27,11 +27,19 @@ this will lose the color definition.
 
 */
 
-module clapboard(width=10, height=5, boardwidth=1, boardthickness=0.1, pitch=5)
-{
-	for (board = [0:1:height-1]) // number of boards, given by height
+//Lays out the pattern without consideration of height:
+module clapboard_pattern(width, height, boardwidth, boardthickness, pitch) {
+	for (board = [0:1:height/boardwidth]) // number of boards, given by height
 		translate ([0,board*boardwidth,0]) rotate([-pitch,0,0]) cube ([width, boardwidth, boardthickness]);
-	
+}
+
+module clapboard(width=96, height=43, boardwidth=4, boardthickness=1, pitch=5, wallthickness=1)
+{
+	difference()  {
+		clapboard_pattern(width, height, boardwidth, boardthickness, pitch);
+		translate([-width/2,height,-boardwidth/2]) cube([width*2, boardwidth*2, boardwidth*2]);
+	}
+	translate([0,0,-wallthickness]) cube([width, height, wallthickness]);
 }
 
 /* planksiding_old - makes plank walls
@@ -109,5 +117,5 @@ module planksiding(width=10*12, height=5*12, boardwidth=4, boardthickness=1, not
 }
 
 //clapboard();
-planksiding();
+//planksiding();
 
