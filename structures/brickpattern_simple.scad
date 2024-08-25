@@ -1,6 +1,6 @@
 
 module brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth) {
-	for (x = [0:1:width/brickwidth]) 
+	for (x = [0:1:width/(brickwidth+mortarwidth)]) 
 		for (y = [0:1:height/(brickheight+mortarwidth)]) {
 			t = y % 2 ? 0 : brickwidth/2;
 			translate([(x*(brickwidth+mortarwidth))-t,y*(brickheight+mortarwidth),0]) 
