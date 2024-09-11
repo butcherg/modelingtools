@@ -1,6 +1,6 @@
 
 module brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth) {
-	for (x = [0:1:width/brickwidth]) 
+	for (x = [0:1:width/(brickwidth+mortarwidth)]) 
 		for (y = [0:1:height/(brickheight+mortarwidth)]) {
 			t = y % 2 ? 0 : brickwidth/2;
 			translate([(x*(brickwidth+mortarwidth))-t,y*(brickheight+mortarwidth),0]) 
@@ -21,4 +21,5 @@ module brickwall(width, height, brickwidth, brickheight, brickthickness, mortarw
 	cube([width, height, mortarthickness]);
 }
 
-brickwall(67, 23, 6, 2, 2, 0.4, 1);
+brickwall(width=96, height=49, brickwidth=8, brickheight=4, brickthickness=4, 
+	mortarwidth=0.5, mortarthickness=2);
