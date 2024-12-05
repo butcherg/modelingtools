@@ -6,9 +6,9 @@ License: CC-BY-4.0
 
 
 //Width of the wall opening into which the window will be inserted
-opening_width=24+12;
+opening_width=24;
 //Height of the wall opening into which the window will be inserted
-opening_height=48+48+18;
+opening_height=48;
 //Overall depth of the window
 window_depth=4;
 
@@ -23,22 +23,22 @@ muntin_width=1;
 sash_depth=1;
 
 //Number of sashes, max 3
-number_sashes=3;
+number_sashes=2;
 
 //Number of rows of panes in the upper sash
-upper_sash_layout_rows=4;
+upper_sash_layout_rows=2;
 //Number of columns of panes in the upper sash
-upper_sash_layout_columns=4;
+upper_sash_layout_columns=2;
 
 //Number of rows of panes in the middle sash
-middle_sash_layout_rows=3;
+middle_sash_layout_rows=2;
 //Number of columns of panes in the middle sash
-middle_sash_layout_columns=4;
+middle_sash_layout_columns=2;
 
 //Number of rows of panes in the lower sash
 lower_sash_layout_rows=2;
 //Number of columns of panes in the lower sash
-lower_sash_layout_columns=4;
+lower_sash_layout_columns=2;
 
 //Use this to change the depth of the upper sash
 upper_sash_offset=0;
