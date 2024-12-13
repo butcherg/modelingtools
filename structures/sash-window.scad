@@ -25,6 +25,12 @@ sash_depth=1;
 //Number of sashes, max 3
 number_sashes=2;
 
+//Sill
+sill=1;
+
+//Use this to print the window with/without the spacing to allow inserting a printed window into a separate wall
+inset=1;
+
 //Number of rows of panes in the upper sash
 upper_sash_layout_rows=2;
 //Number of columns of panes in the upper sash
@@ -46,8 +52,7 @@ upper_sash_offset=0;
 lower_sash_offset=0;
 
 
-//Use this to print the window with/without the spacing to allow inserting a printed window into a separate wall
-inset=1;
+
 //The modeling scale of the .stl file.  Specifies the denominator of the scale, e.g., 1/87 for HO scale, the default.  Assumes the dimensions specified in the previous parameters are prototype, e.g. 1:1.
 modeling_scale=87;
 //Scales the model for printing.  Default is 25.4, the multiplier to convert decimal inches to millimeters.
@@ -96,21 +101,37 @@ module windowframe(opening_width, opening_height, depth, board_width, board_thic
 		union() {
 			difference() {
 				translate([0,-(opening_width+board_width)/2,0])
-					cube([opening_height+board_width,opening_width+board_width,depth]);
-				translate([-0.01,-(opening_width-board_thickness*2)/2,-depth*2]) //main opening
+					cube([opening_height+board_width*2,opening_width+board_width,depth]);
+				translate([board_width,-(opening_width-board_thickness*2)/2,-depth*2]) //main opening
 					cube([opening_height,opening_width-board_thickness*2,depth*4]);
 			}
-			translate([0,-(opening_width+board_width*2)/2,0])
-				cube([board_thickness,opening_width+board_width*2,depth+board_width/2]);
+			if (sill) {
+				translate([board_width-board_thickness,-(opening_width+board_width*2)/2,0])
+					cube([board_thickness,opening_width+board_width*2,depth+board_width/2]);
+			}
 		}
+		
 		if (inset) {  //cutouts to support inserting a printed window into a hole
+			//left:
 			translate([-opening_height,opening_width/2,-0.01])
 				cube([opening_height*3,board_width*2,depth-board_thickness]);
+			//right:
 			translate([-opening_height,-(opening_width/2)-board_width*2,-0.01])
 				cube([opening_height*3,board_width*2,depth-board_thickness]);
-			translate([opening_height+board_thickness,-opening_width,-0.01])
+			//top:
+			translate([opening_height+board_width+board_thickness,-opening_width,-0.01])
 				cube([board_width,opening_width*2,depth-board_thickness]);
+			//bottom:
+			bd = sill ? 2 : 1;
+			translate([-0.01,-opening_width,-0.01])
+				cube([board_width-board_thickness,opening_width*2,(depth-board_thickness)*bd]);
 		}
+		else if (sill) {
+			bd = sill ? 2 : 1;
+			translate([-0.01,-opening_width,-0.01])
+				cube([board_width-board_thickness,opening_width*2,(depth-board_thickness)*bd]);
+		}
+		
 	}
 }
 
@@ -122,35 +143,35 @@ module doublehung_window(opening_width, opening_height, depth, board_width, boar
 		windowframe(opening_width, opening_height, depth, board_width, board_thickness, inset);
 		
 		if (number_sashes == 2) {
-			sh = ((opening_height-board_thickness)/2);
+			sh = opening_height/2;
 			//lower sash:
-			translate([board_thickness+sh,0,sash_depth+sashthickness])			
+			translate([board_width+sh,0,sash_depth+sashthickness])			
 				rotate([0,90,0]) 
 					sash(opening_width-board_thickness*2,sh,sashthickness,sash_depth,uppersash);
 			//upper sash:
-			translate([board_thickness,0,sash_depth])			
+			translate([board_width,0,sash_depth])			
 				rotate([0,90,0]) 
 					sash(opening_width-board_thickness*2,sh,sashthickness,sash_depth, lowersash);
 		}
 		else if (number_sashes == 3) {
-			sh = ((opening_height-board_thickness)/3);
+			sh = opening_height/3;
 			//upper sash:
-			translate([board_thickness+sh*2,0,sash_depth+sashthickness*2])			
+			translate([board_width+sh*2,0,sash_depth+sashthickness*2])			
 				rotate([0,90,0]) 
 					sash(opening_width-board_thickness*2,sh,sashthickness,sash_depth,uppersash);
 			//middle sash:
-			translate([board_thickness+sh,0,sash_depth+sashthickness])			
+			translate([board_width+sh,0,sash_depth+sashthickness])			
 				rotate([0,90,0]) 
 					sash(opening_width-board_thickness*2,sh,sashthickness,sash_depth,middlesash);
 			//lower sash:
-			translate([board_thickness,0,sash_depth])			
+			translate([board_width,0,sash_depth])			
 				rotate([0,90,0]) 
 					sash(opening_width-board_thickness*2,sh,sashthickness,sash_depth, lowersash);
 		}
-		else {  // one sash, default
-			sh = (opening_height-board_thickness);
+		else {  // one sash
+			sh = opening_height;
 			//only sash, uses lower sash numbers:
-			translate([board_thickness,0,sash_depth+sashthickness])			
+			translate([board_width,0,sash_depth+sashthickness])			
 				rotate([0,90,0]) 
 					sash(opening_width-board_thickness*2,sh,sashthickness,sash_depth,lowersash);
 		}
