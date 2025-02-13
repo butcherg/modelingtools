@@ -1,7 +1,7 @@
 //Window diameter
 diameter=36;
 //Width of the frame components
-framewidth=4; 
+framewidth=4;
 //Number of muntins
 numbermuntins=3;
 //Width of the muntins
