@@ -96,7 +96,7 @@ module board(length, width, thickness) {
 		translate([0,-width/2,0]) cube([length, width, thickness]);
 }
 
-module windowframe(opening_width, opening_height, depth, board_width, board_thickness, inset=0) {
+module windowframe(opening_width, opening_height, depth, board_width, board_thickness, sill=1, inset=0) {
 	difference() {
 		union() {
 			difference() {
@@ -136,11 +136,11 @@ module windowframe(opening_width, opening_height, depth, board_width, board_thic
 }
 
 
-//draws a double-hung window anchored to an opening width and height with the specified sash layout:
-module doublehung_window(opening_width, opening_height, depth, board_width, board_thickness, sashthickness, sash_depth, uppersash, middlesash, lowersash, inset) {
+//draws a sash window anchored to an opening width and height with the specified sash layout:
+module sash_window(opening_width, opening_height, depth, board_width, board_thickness, sashthickness, sash_depth, uppersash, middlesash, lowersash, sill, inset) {
 	rotate([0,-90,90])
 	translate([0,-opening_width/2,-depth+board_thickness]) {
-		windowframe(opening_width, opening_height, depth, board_width, board_thickness, inset);
+		windowframe(opening_width, opening_height, depth, board_width, board_thickness, sill, inset);
 		
 		if (number_sashes == 2) {
 			sh = opening_height/2;
@@ -180,5 +180,5 @@ module doublehung_window(opening_width, opening_height, depth, board_width, boar
 
 scale(printing_scale)
 	scale(1/modeling_scale)
-		doublehung_window(opening_width, opening_height, window_depth, board_width, board_thickness, muntin_width, sash_depth, upper_sash_layout, middle_sash_layout, lower_sash_layout, inset);
+		sash_window(opening_width, opening_height, window_depth, board_width, board_thickness, muntin_width, sash_depth, upper_sash_layout, middle_sash_layout, lower_sash_layout, sill, inset);
 
