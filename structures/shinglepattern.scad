@@ -23,11 +23,12 @@ modeling_scale=87;
 printing_scale=25.4;
 
 
-module shingle(width, height, thickness, gap, slant=2) {
-	rotate([-slant,0,0]) cube([width-gap, height, thickness]);
+module shingle(shingle_width, shingle_height, shingle_thickness, gap, slant) {
+	rotate([-slant,0,0]) 
+		cube([shingle_width-gap, shingle_height, shingle_thickness]);
 }
 
-module shingle_pattern(sheet_width, sheet_height, shingle_gap, shingle_thickness, shingle_slant) {
+module shingle_pattern(sheet_width, sheet_height, shingle_width, shingle_height, shingle_thickness, shingle_gap, shingle_slant) {
 	for (j = [0:shingle_width:sheet_height]) {
 		for (i = [0:shingle_width:sheet_width]) {
 			t = (j/shingle_width) % 2 ? 0: shingle_width/2;
@@ -36,12 +37,12 @@ module shingle_pattern(sheet_width, sheet_height, shingle_gap, shingle_thickness
 		}
 	}
 }
-module shingle_sheet(width, height, shingle_gap, shingle_thickness, shingle_slant, roof_thickness) {
+module shingle_sheet(width, height, shingle_width, shingle_height, shingle_thickness, shingle_gap, shingle_slant, roof_thickness) {
 	maxrot = atan(shingle_thickness/shingle_height);
 	rot = maxrot > shingle_slant ? shingle_slant : maxrot;
 	difference() {
 		union() {
-			shingle_pattern(width,height,shingle_gap,shingle_thickness, rot);
+			shingle_pattern(width,height,shingle_width, shingle_height, shingle_thickness, shingle_gap, rot);
 			translate([0,0,-roof_thickness]) cube([width,height,roof_thickness]);
 		}
 		translate([-shingle_width*2,0,-shingle_thickness*5]) cube([shingle_width*2,height,shingle_thickness*10]);
@@ -50,7 +51,10 @@ module shingle_sheet(width, height, shingle_gap, shingle_thickness, shingle_slan
 	}
 }
 
+
 scale(printing_scale)
 	scale(1/modeling_scale)
 		//shingle(8,8,0.5,0.5,shingle_slant);
-		shingle_sheet(sheet_width,sheet_height,shingle_gap, shingle_thickness, shingle_slant, roof_thickness);
+		//shingle_sheet(sheet_width,sheet_height,shingle_gap, shingle_thickness, shingle_slant, roof_thickness);
+		shingle_sheet(width=sheet_width, height=sheet_height, shingle_width=shingle_width, shingle_height=shingle_height, shingle_thickness=shingle_thickness, shingle_gap=shingle_gap, shingle_slant=shingle_slant, roof_thickness=roof_thickness);
+		
