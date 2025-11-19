@@ -1,16 +1,27 @@
 
-module brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth) {
-	for (x = [0:1:width/(brickwidth+mortarwidth)]) 
-		for (y = [0:1:height/(brickheight+mortarwidth)]) {
-			t = y % 2 ? 0 : brickwidth/2;
-			translate([(x*(brickwidth+mortarwidth))-t,y*(brickheight+mortarwidth),0]) 
-				cube([brickwidth, brickheight, brickthickness]);
+module brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth, headerinterval) {
+	
+	for (y = [1:1:height/(brickheight+mortarwidth)+1]) {
+		if (headerinterval > 0 && y % headerinterval == 0) {
+			for (x = [0:1:width/(brickthickness+mortarwidth)+1]) {
+				t = (brickthickness+mortarwidth)/2;
+				translate([(x*(brickthickness+mortarwidth))-t,(y-1)*(brickheight+mortarwidth),0]) 
+					cube([brickthickness, brickheight, brickthickness]);
+			}
 		}
+		else {
+			for (x = [0:1:width/(brickwidth+mortarwidth)+1]) {
+				t = y % 2 ? 0 : brickwidth/2;
+				translate([(x*(brickwidth+mortarwidth))-t,(y-1)*(brickheight+mortarwidth),0]) 
+					cube([brickwidth, brickheight, brickthickness]);
+			}
+		}
+	}
 }
 
-module brickwall(width, height, brickwidth, brickheight, brickthickness, mortarwidth, mortarthickness) {
+module brickwall(width, height, brickwidth, brickheight, brickthickness, mortarwidth, mortarthickness, headerinterval) {
 	difference() {
-		brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth);
+		brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth, headerinterval);
 		translate([-brickwidth,-height/2,-brickthickness/2]) 
 			cube([brickwidth,height*2,brickthickness*2]);
 		translate([width,-height/2,-brickthickness/2]) 
@@ -21,5 +32,12 @@ module brickwall(width, height, brickwidth, brickheight, brickthickness, mortarw
 	cube([width, height, mortarthickness]);
 }
 
-brickwall(width=96, height=49, brickwidth=8, brickheight=4, brickthickness=4, 
-	mortarwidth=0.5, mortarthickness=2);
+width=127; height=64; brickwidth=7.0+(5.0/8.0); brickheight=2.0+(1.0/4.0); brickthickness=3.0+(5.0/8.0); mortarwidth=3.0/8.0; mortarthickness=brickthickness/2.0;
+headerinterval=6;
+
+//width=900; height=600; brickwidth=7.0+(5.0/8.0); brickheight=2.0+(1.0/4.0); brickthickness=3.0+(5.0/8.0); mortarwidth=3.0/8.0; mortarthickness=brickthickness/2.0;
+//headerinterval=6;
+
+
+brickwall(width, height, brickwidth, brickheight, brickthickness, 
+	mortarwidth, mortarthickness, headerinterval);
