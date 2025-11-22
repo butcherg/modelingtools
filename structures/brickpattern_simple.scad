@@ -1,5 +1,5 @@
 
-module brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth, headerinterval) {
+module brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth, headerinterval, patternreverse=1) {
 	
 	for (y = [1:1:height/(brickheight+mortarwidth)+1]) {
 		if (headerinterval > 0 && y % headerinterval == 0) {
@@ -10,10 +10,19 @@ module brickpattern(width, height, brickwidth, brickheight, brickthickness, mort
 			}
 		}
 		else {
-			for (x = [0:1:width/(brickwidth+mortarwidth)+1]) {
-				t = y % 2 ? 0 : brickwidth/2;
-				translate([(x*(brickwidth+mortarwidth))-t,(y-1)*(brickheight+mortarwidth),0]) 
-					cube([brickwidth, brickheight, brickthickness]);
+			if (patternreverse == 0) {
+				for (x = [0:1:width/(brickwidth+mortarwidth)+1]) {
+					t = y % 2 ? 0 : brickwidth/2;
+					translate([(x*(brickwidth+mortarwidth))-t,(y-1)*(brickheight+mortarwidth),0]) 
+						cube([brickwidth, brickheight, brickthickness]);
+				}
+			}
+			else {
+				for (x = [0:1:width/(brickwidth+mortarwidth)+1]) {
+					t = y % 2 ? brickwidth/2 : 0 ;
+					translate([(x*(brickwidth+mortarwidth))-t,(y-1)*(brickheight+mortarwidth),0]) 
+						cube([brickwidth, brickheight, brickthickness]);
+				}
 			}
 		}
 	}
