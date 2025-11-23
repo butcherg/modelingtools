@@ -1,12 +1,30 @@
 
-module brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth, headerinterval, patternreverse=1) {
+bricksizes = [  //tuples are brickwidth, brickheight, brickthickness, mortarwidth
+	[7.625,	2.25, 3.625, 0.375],		//0: modular, 3/8" mortar
+	[7.5, 2.25, 3.5, 0.5]			//1: modular, 1/2" mortar
+];
+
+
+
+module brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth, headerinterval=0, headerstyle=0, patternreverse=0) {
 	
 	for (y = [1:1:height/(brickheight+mortarwidth)+1]) {
 		if (headerinterval > 0 && y % headerinterval == 0) {
-			for (x = [0:1:width/(brickthickness+mortarwidth)+1]) {
-				t = (brickthickness+mortarwidth)/2;
-				translate([(x*(brickthickness+mortarwidth))-t,(y-1)*(brickheight+mortarwidth),0]) 
-					cube([brickthickness, brickheight, brickthickness]);
+			if (headerstyle == 0) { //regular headers
+				for (x = [0:1:width/(brickthickness+mortarwidth)+1]) {
+					t = (brickthickness+mortarwidth)/2;
+					translate([(x*(brickthickness+mortarwidth))-t,(y-1)*(brickheight+mortarwidth),0]) 
+						cube([brickthickness, brickheight, brickthickness]);
+				}
+			}
+			else {  //flemish headers
+				for (x = [0:1:width/(brickthickness+brickwidth+mortarwidth*2)+1]) {
+					t = (brickthickness+brickwidth+mortarwidth*2)/2;
+					translate([(x*(brickthickness+brickwidth+mortarwidth*2))-t,(y-1)*(brickheight+mortarwidth),0]) 
+						cube([brickthickness, brickheight, brickthickness]);
+					translate([(x*(brickthickness+brickwidth+mortarwidth*2))+brickthickness+mortarwidth-t,(y-1)*(brickheight+mortarwidth),0]) 
+						cube([brickwidth, brickheight, brickthickness]);
+				}
 			}
 		}
 		else {
@@ -28,7 +46,7 @@ module brickpattern(width, height, brickwidth, brickheight, brickthickness, mort
 	}
 }
 
-module brickwall(width, height, brickwidth, brickheight, brickthickness, mortarwidth, mortarthickness, headerinterval) {
+module brickwall_manual(width, height, brickwidth, brickheight, brickthickness, mortarwidth, mortarthickness, headerinterval, patternreverse) {
 	difference() {
 		brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth, headerinterval);
 		translate([-brickwidth,-height/2,-brickthickness/2]) 
@@ -41,12 +59,35 @@ module brickwall(width, height, brickwidth, brickheight, brickthickness, mortarw
 	cube([width, height, mortarthickness]);
 }
 
-width=127; height=64; brickwidth=7.0+(5.0/8.0); brickheight=2.0+(1.0/4.0); brickthickness=3.0+(5.0/8.0); mortarwidth=3.0/8.0; mortarthickness=brickthickness/2.0;
+module brickwall(width, height, brickstyle, mortarthickness, headerinterval, headerstyle,  patternreverse) {
+	brickwidth=bricksizes[brickstyle][0];
+	brickheight=bricksizes[brickstyle][1];
+	brickthickness=bricksizes[brickstyle][2];
+	mortarwidth=bricksizes[brickstyle][3];
+	difference() {
+		color("red") brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth, headerinterval, headerstyle, patternreverse);
+		translate([-brickwidth,-height/2,-brickthickness/2]) 
+			cube([brickwidth,height*2,brickthickness*2]);
+		translate([width,-height/2,-brickthickness/2]) 
+			cube([brickwidth*2,height*2,brickthickness*2]);	
+		translate([-width/2,height,-brickthickness/2]) 
+			cube([width*2, brickheight*2, brickthickness*2]);
+	}
+	translate([0,0,-0.01]) color("white") cube([width, height, brickthickness*0.90]);
+}
+
+width=127.5; height=65.5; 
+
+//modular, 3/8" joints:
+//brickwidth=7.625;	brickheight=2.25; brickthickness=3.625; mortarwidth=0.375;
+
+//modular, 1/2" joints:
+brickwidth=7.5; brickheight=2.25; brickthickness=3.5; mortarwidth=0.5;
+
+brickstyle=1;
+mortarthickness=brickthickness/2.0;
 headerinterval=6;
+headerstyle=1;
+patternreverse=0;
 
-//width=900; height=600; brickwidth=7.0+(5.0/8.0); brickheight=2.0+(1.0/4.0); brickthickness=3.0+(5.0/8.0); mortarwidth=3.0/8.0; mortarthickness=brickthickness/2.0;
-//headerinterval=6;
-
-
-brickwall(width, height, brickwidth, brickheight, brickthickness, 
-	mortarwidth, mortarthickness, headerinterval);
+brickwall(width, height,  brickstyle, mortarthickness, headerinterval, headerstyle, patternreverse);
