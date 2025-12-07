@@ -23,7 +23,7 @@ muntin_width=1;
 sash_depth=1;
 
 //Number of sashes, max 3
-number_sashes=2;
+number_sashes=3;
 
 //Sill
 sill=1;
@@ -137,7 +137,7 @@ module windowframe(opening_width, opening_height, depth, board_width, board_thic
 
 
 //draws a sash window anchored to an opening width and height with the specified sash layout:
-module sash_window(opening_width, opening_height, depth, board_width, board_thickness, sashthickness, sash_depth, uppersash, middlesash, lowersash, sill, inset) {
+module sash_window(opening_width, opening_height, depth, board_width, board_thickness, sashthickness, sash_depth, number_sashes, uppersash, middlesash, lowersash, sill, inset) {
 	rotate([0,-90,90])
 	translate([0,-opening_width/2,-depth+board_thickness]) {
 		windowframe(opening_width, opening_height, depth, board_width, board_thickness, sill, inset);
@@ -180,5 +180,5 @@ module sash_window(opening_width, opening_height, depth, board_width, board_thic
 
 scale(printing_scale)
 	scale(1/modeling_scale)
-		sash_window(opening_width, opening_height, window_depth, board_width, board_thickness, muntin_width, sash_depth, upper_sash_layout, middle_sash_layout, lower_sash_layout, sill, inset);
+		sash_window(opening_width, opening_height, window_depth, board_width, board_thickness, muntin_width, sash_depth, number_sashes, upper_sash_layout, middle_sash_layout, lower_sash_layout, sill, inset);
 
