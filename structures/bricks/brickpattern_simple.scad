@@ -1,10 +1,5 @@
 
-bricksizes = [  //tuples are brickwidth, brickheight, brickthickness, mortarwidth
-	[7.625,	2.25, 3.625, 0.375],		//0: modular, 3/8" mortar
-	[7.5, 2.25, 3.5, 0.5]			//1: modular, 1/2" mortar
-];
-
-
+include <brickstyles.scad>
 
 module brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth, headerinterval=0, headerstyle=0, patternreverse=0) {
 	
@@ -59,21 +54,46 @@ module brickwall_manual(width, height, brickwidth, brickheight, brickthickness, 
 	cube([width, height, mortarthickness]);
 }
 
-module brickwall(width, height, brickstyle, mortarthickness, headerinterval, headerstyle,  patternreverse) {
+module brickwall(width, height, brickstyle, mortarthickness, headerinterval, headerstyle,  patternreverse, mortar=1) {
 	brickwidth=bricksizes[brickstyle][0];
 	brickheight=bricksizes[brickstyle][1];
 	brickthickness=bricksizes[brickstyle][2];
 	mortarwidth=bricksizes[brickstyle][3];
 	difference() {
 		color("red") brickpattern(width, height, brickwidth, brickheight, brickthickness, mortarwidth, headerinterval, headerstyle, patternreverse);
-		translate([-brickwidth,-height/2,-brickthickness/2]) 
+		translate([-brickwidth,-height/2,-brickthickness/2])	//left cutter
 			cube([brickwidth,height*2,brickthickness*2]);
-		translate([width,-height/2,-brickthickness/2]) 
-			cube([brickwidth*2,height*2,brickthickness*2]);	
-		translate([-width/2,height,-brickthickness/2]) 
+		translate([width,-height/2,-brickthickness/2]) 			// right cutter
+			cube([brickwidth*4,height*2,brickthickness*2]);	
+		translate([-width/2,height,-brickthickness/2]) 			// top cutter
 			cube([width*2, brickheight*2, brickthickness*2]);
 	}
-	translate([0,0,-0.01]) color("white") cube([width, height, brickthickness*0.90]);
+	if (mortarthickness) translate([0,0,-0.01]) color("white") cube([width, height, brickthickness*0.90]);
+}
+
+module soldiercourse(width, brickstyle, vertical=1, mortar=1)
+{
+	brickwidth=bricksizes[brickstyle][0];
+	brickheight=bricksizes[brickstyle][1];
+	brickthickness=bricksizes[brickstyle][2];
+	mortarwidth=bricksizes[brickstyle][3];
+	
+	for (x = [0:brickheight+mortarwidth:width])
+		translate([x,0,0]) 
+			if (vertical)
+				color("red") cube([brickheight, brickwidth, brickthickness]);
+			else
+				color("red") cube([brickheight, brickthickness, brickwidth]);
+}
+
+module brick(header=0) {
+	brickwidth=bricksizes[brickstyle][0];
+	brickheight=bricksizes[brickstyle][1];
+	brickthickness=bricksizes[brickstyle][2];
+	if (header) 
+		color("red") cube([brickthickness, brickheight, brickwidth]);
+	else
+		color("red") cube([brickwidth, brickheight, brickthickness]);
 }
 
 width=127.5; height=65.5; 
@@ -89,5 +109,7 @@ mortarthickness=brickthickness/2.0;
 headerinterval=6;
 headerstyle=1;
 patternreverse=0;
+vertical=0;
 
 brickwall(width, height,  brickstyle, mortarthickness, headerinterval, headerstyle, patternreverse);
+//soldiercourse(width, brickstyle, vertical, mortarthickness);
